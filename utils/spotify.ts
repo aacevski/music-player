@@ -1,9 +1,8 @@
 import querystring from "querystring";
 
-const client_id = "140526a5c3074a7cba86129838ea667b";
-const client_secret = "f819e6031f2b4ab58e6382212eede196";
-const refresh_token =
-  "AQAfSpxhdj5URPVooNoUN8RxDVPOKIcZLgkPNfwkJ7V8yCremIt05sW2OMgVec7l2Cft3uln6gvRNoNLsC9kQcg__fbr81GgmOhQ2i5OhjFYsKzk1eIwZ8Q8T85CRciII_4";
+const client_id = process.env.client_id;
+const client_secret = process.env.client_secret;
+const refresh_token = process.env.refresh_token;
 
 const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
