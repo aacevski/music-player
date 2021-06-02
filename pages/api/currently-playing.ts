@@ -17,11 +17,6 @@ export default async function handler(_: any, res: any) {
   const albumImageUrl = song.item.album.images[0].url;
   const songUrl = song.item.external_urls.spotify;
 
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=60, stale-while-revalidate=10"
-  );
-
   return res.status(200).json({
     album,
     albumImageUrl,
