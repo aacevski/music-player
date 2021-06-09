@@ -7,14 +7,7 @@ import {
   CircularProgress,
   LinearProgress,
 } from "@material-ui/core";
-import dynamic from "next/dynamic";
-
 import useSWR from "swr";
-// import ProgressTimer from "react-progress-timer";
-
-const DynamicComponent = dynamic(() => import("react-progress-timer"), {
-  ssr: false,
-});
 
 import fetcher from "../utils/fetcher";
 
@@ -142,7 +135,7 @@ const IndexPage = () => {
 
   const convertTime = (progress: any) => {
     let minutes = Math.floor(progress / 60);
-    let seconds = progress - minutes * 60;
+    let seconds: any = progress - minutes * 60;
     if (seconds < 10) {
       seconds = "0" + seconds;
     }
