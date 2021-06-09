@@ -48,3 +48,15 @@ export const getCurrentlyPlaying = async () => {
     },
   });
 };
+
+const NEXT_SONG_ENDPOINT = `https://api.spotify.com/v1/me/player/next`;
+
+export const nextSong = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(NEXT_SONG_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};

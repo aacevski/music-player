@@ -1,5 +1,21 @@
-import { Box, CssBaseline, makeStyles, Typography } from "@material-ui/core";
+import React from "react";
+import {
+  Box,
+  CssBaseline,
+  makeStyles,
+  Typography,
+  CircularProgress,
+  LinearProgress,
+} from "@material-ui/core";
+import dynamic from "next/dynamic";
+
 import useSWR from "swr";
+// import ProgressTimer from "react-progress-timer";
+
+const DynamicComponent = dynamic(() => import("react-progress-timer"), {
+  ssr: false,
+});
+
 import fetcher from "../utils/fetcher";
 
 const useStyles = makeStyles((theme: any) => ({
@@ -48,6 +64,19 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
 
+  controls: {
+    display: "flex",
+    height: "100%",
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingLeft: 32,
+    paddingRight: 32,
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+
   songPlayingCover: {
     height: 60,
     objectFit: "cover",
@@ -91,14 +120,53 @@ const useStyles = makeStyles((theme: any) => ({
     height: 40,
     marginTop: 40,
   },
+
+  loadingSpinner: {
+    color: "#5054AC",
+  },
+
+  progressBar: {
+    width: "100%",
+  },
+
+  timeStamp: {
+    marginLeft: 10,
+    color: "gray",
+    fontSize: 13,
+  },
 }));
 
 const IndexPage = () => {
   const classes = useStyles();
+  const [progress, setProgress] = React.useState<any>(0);
+
+  const convertTime = (progress: any) => {
+    let minutes = Math.floor(progress / 60);
+    let seconds = progress - minutes * 60;
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
+    progress = minutes + ":" + seconds;
+    return progress;
+  };
 
   const { data } = useSWR("/api/currently-playing", fetcher, {
-    refreshInterval: 10,
+    refreshInterval: 1,
   });
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress(progress + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [progress]);
+
+  React.useEffect(() => {
+    setProgress(0);
+  }, [data]);
 
   return (
     <>
@@ -127,24 +195,42 @@ const IndexPage = () => {
           <Box flexDirection="row" display="flex" width="100%" height="15%">
             <Box className={classes.footer}>
               <Box className={classes.songPlaying}>
-                <img
-                  src={data?.albumImageUrl}
-                  alt="Album Cover"
-                  className={classes.songPlayingCover}
+                {!data?.isPlaying ? (
+                  <CircularProgress className={classes.loadingSpinner} />
+                ) : (
+                  <>
+                    <img
+                      src={data?.albumImageUrl}
+                      alt="Album Cover"
+                      className={classes.songPlayingCover}
+                    />
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      overflow="hidden"
+                      width="100%"
+                    >
+                      <Typography className={classes.songPlayingName} noWrap>
+                        {data?.title}
+                      </Typography>
+                      <Typography className={classes.songArtist} noWrap>
+                        {data?.artist}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+              </Box>
+
+              <Box className={classes.controls}>
+                <LinearProgress
+                  color="secondary"
+                  variant="determinate"
+                  value={(progress * 100) / Number(data?.duration_ms / 1000)}
+                  className={classes.progressBar}
                 />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  overflow="hidden"
-                  width="100%"
-                >
-                  <Typography className={classes.songPlayingName} noWrap>
-                    {data?.title}
-                  </Typography>
-                  <Typography className={classes.songArtist} noWrap>
-                    {data?.artist}
-                  </Typography>
-                </Box>
+                <Typography className={classes.timeStamp}>
+                  {convertTime(progress)}
+                </Typography>
               </Box>
             </Box>
           </Box>
