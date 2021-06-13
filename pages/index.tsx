@@ -281,23 +281,25 @@ const IndexPage = () => {
               </Box>
 
               <Box className={classes.controls}>
-                {!data?.isPlaying ? (
-                  <CircularProgress className={classes.loadingSpinner} />
-                ) : (
-                  <>
-                    <LinearProgress
-                      color="secondary"
-                      variant="determinate"
-                      value={
-                        (progress * 100) / Number(data?.duration_ms / 1000)
-                      }
-                      className={classes.progressBar}
-                    />
-                    <Typography className={classes.timeStamp}>
-                      {convertTime(progress)}
-                    </Typography>
-                  </>
-                )}
+                {/* {!data?.isPlaying ? ( */}
+                {/* <CircularProgress className={classes.loadingSpinner} /> */}
+                {/* ) : ( */}
+                <>
+                  <LinearProgress
+                    color="secondary"
+                    variant="determinate"
+                    value={
+                      !data?.isPlaying
+                        ? 0
+                        : (progress * 100) / Number(data?.duration_ms / 1000)
+                    }
+                    className={classes.progressBar}
+                  />
+                  <Typography className={classes.timeStamp}>
+                    {!data?.isPlaying ? "0:00" : convertTime(progress)}
+                  </Typography>
+                </>
+                {/* )} */}
               </Box>
             </Box>
           </Box>
