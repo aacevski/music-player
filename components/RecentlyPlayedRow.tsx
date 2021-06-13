@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles({
   root: {
     width: "100%",
     height: "30%",
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: any) => ({
   image: {
     height: "90%",
   },
-}));
+});
 
 export default function RecentlyPlayedRow() {
   const classes = useStyles();
