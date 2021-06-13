@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
     borderTopRightRadius: 20,
     flexDirection: "column",
     marginTop: "32px",
-    padding: 8,
+    padding: "8px 8px 40px 8px",
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
       width: "100%",

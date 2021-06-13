@@ -8,11 +8,11 @@ const useStyles = makeStyles({
     display: "flex",
     width: "full",
     bgcolor: "white",
-    padding: "16px 20px  20px",
+    padding: "16px 20px 0px 20px",
     marginTop: 16,
     flexDirection: "column",
     overflowY: "scroll",
-    height: "48%",
+    flex: 1,
   },
   heading: {
     width: "100%",

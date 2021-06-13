@@ -7,11 +7,14 @@ import fetcher from "../utils/fetcher";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    height: "33%",
+    height: "35%",
     bgcolor: "white",
     display: "flex",
     overflowX: "scroll",
     marginTop: "16px",
+    [theme.breakpoints.down("xs")]: {
+      height: "40%",
+    },
   },
   card: {
     margin: "0 32px",
