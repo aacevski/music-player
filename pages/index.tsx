@@ -6,12 +6,16 @@ import {
   Typography,
   CircularProgress,
   LinearProgress,
+  Input,
+  InputAdornment,
 } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
+import UserProfile from "../components/UserProfile";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     width: "70%",
@@ -54,6 +58,7 @@ const useStyles = makeStyles((theme: any) => ({
     paddingRight: 15,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
+      paddingBottom: 8,
     },
   },
 
@@ -67,6 +72,9 @@ const useStyles = makeStyles((theme: any) => ({
     paddingRight: 32,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
+      paddingLeft: 0,
+      paddingRight: 0,
+      height: "5px",
     },
   },
 
@@ -93,12 +101,12 @@ const useStyles = makeStyles((theme: any) => ({
     borderTopRightRadius: 20,
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
+      width: "100%",
     },
   },
 
   footer: {
     display: "flex",
-    flexDirection: "row",
     height: "100%",
     width: "100%",
     backgroundColor: "#1C1C1C",
@@ -106,6 +114,7 @@ const useStyles = makeStyles((theme: any) => ({
     borderBottomRightRadius: 20,
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
+      flexDirection: "column-reverse",
     },
   },
 
@@ -120,18 +129,47 @@ const useStyles = makeStyles((theme: any) => ({
 
   progressBar: {
     width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      height: "5px",
+    },
   },
 
   timeStamp: {
     marginLeft: 10,
     color: "gray",
     fontSize: 13,
+    [theme.breakpoints.down("sm")]: { display: "none" },
+  },
+
+  input: {
+    border: "1.5px solid #151515",
+    borderRadius: 10,
+    padding: "16px 16px 16px 6px",
+    color: "white",
+    height: "32px",
+    transition: "border 250ms ease-out",
+  },
+
+  inputFocused: {
+    border: "1.5px solid #F50057",
+  },
+
+  userSearchRow: {
+    width: "100%",
+    display: "flex",
+    paddingLeft: "32px",
+    paddingTop: "16px",
+    paddingRight: "32px",
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: "16px",
+      paddingTop: "16px",
+      paddingRight: "16px",
+    },
   },
 }));
 
 const IndexPage = () => {
   const classes = useStyles();
-  const [progress, setProgress] = React.useState<any>(0);
 
   const convertTime = (progress: any) => {
     let minutes = Math.floor(progress / 60);
@@ -147,6 +185,10 @@ const IndexPage = () => {
     refreshInterval: 1,
   });
 
+  const [progress, setProgress] = React.useState<any>(
+    Math.round(data?.progress_ms / 1000)
+  );
+
   React.useEffect(() => {
     const timer = setInterval(() => {
       setProgress(progress + 1);
@@ -158,8 +200,8 @@ const IndexPage = () => {
   }, [progress]);
 
   React.useEffect(() => {
-    setProgress(0);
-  }, [data]);
+    setProgress(Math.round(data?.progress_ms / 1000));
+  }, [data?.progress_ms]);
 
   return (
     <>
@@ -182,7 +224,31 @@ const IndexPage = () => {
               />
             </Box>
             <Box className={classes.content}>
-              <Box></Box>
+              <Box className={classes.userSearchRow}>
+                <Box
+                  display="flex"
+                  width="100%"
+                  height="10%"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Box width="70%">
+                    <Input
+                      className={classes.input}
+                      classes={{ focused: classes.inputFocused }}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      }
+                      placeholder="Search for sounds, tracks"
+                      fullWidth={true}
+                      disableUnderline={true}
+                    />
+                  </Box>
+                  <UserProfile />
+                </Box>
+              </Box>
             </Box>
           </Box>
           <Box flexDirection="row" display="flex" width="100%" height="15%">

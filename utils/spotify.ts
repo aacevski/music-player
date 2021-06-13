@@ -60,3 +60,15 @@ export const nextSong = async () => {
     },
   });
 };
+
+const USER_PROFILE = `https://api.spotify.com/v1/me`;
+
+export const userProfile = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(USER_PROFILE, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};

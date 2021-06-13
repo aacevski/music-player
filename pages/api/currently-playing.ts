@@ -17,6 +17,7 @@ export default async function handler(_: any, res: any) {
   const albumImageUrl = song.item.album.images[0].url;
   const songUrl = song.item.external_urls.spotify;
   const duration_ms = song.item.duration_ms;
+  const progress_ms = song.progress_ms;
 
   return res.status(200).json({
     album,
@@ -26,5 +27,6 @@ export default async function handler(_: any, res: any) {
     songUrl,
     title,
     duration_ms,
+    progress_ms,
   });
 }
