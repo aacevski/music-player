@@ -80,7 +80,18 @@ export const recentlyPlayed = async () => {
   return fetch(RECENTLY_PLAYED, {
     headers: {
       Authorization: `Bearer ${access_token}`,
-      scope: "user-read-recently-played",
+    },
+  });
+};
+
+const TOP_TRACKS = `https://api.spotify.com/v1/me/top/tracks?time_range=long_term`;
+
+export const topTracks = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(TOP_TRACKS, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
     },
   });
 };

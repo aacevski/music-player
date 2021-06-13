@@ -15,6 +15,7 @@ import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import UserProfile from "../components/UserProfile";
 import RecentlyPlayedRow from "../components/RecentlyPlayedRow";
+import TopArtists from "../components/TopArtists";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -254,6 +255,7 @@ const IndexPage = () => {
                 </Box>
               </Box>
               <RecentlyPlayedRow />
+              <TopArtists />
             </Box>
           </Box>
           <Box flexDirection="row" display="flex" width="100%" height="15%">

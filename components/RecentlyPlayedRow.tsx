@@ -1,22 +1,42 @@
 import React from "react";
-import { Box, makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    height: "30%",
+    height: "33%",
     bgcolor: "white",
     display: "flex",
     overflowX: "scroll",
     marginTop: "16px",
   },
-  image: {
-    height: "90%",
+  card: {
+    margin: "0 32px",
+    width: "20%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      margin: "0 64px",
+    },
+    [theme.breakpoints.down("xs")]: {
+      margin: "0 80px",
+    },
   },
-});
+  image: {
+    height: "80%",
+    borderRadius: 10,
+  },
+  name: {
+    color: "white",
+    width: 100,
+    textAlign: "center",
+    marginTop: "8px",
+  },
+}));
 
 export default function RecentlyPlayedRow() {
   const classes = useStyles();
@@ -24,9 +44,12 @@ export default function RecentlyPlayedRow() {
 
   return (
     <div className={classes.root}>
-      {data?.tracks.map((track: any) => (
-        <Box margin="0 32px">
-          <img src={track.image} className={classes.image}></img>
+      {data?.tracks.map((track: any, index: number) => (
+        <Box className={classes.card} key={index}>
+          <img src={track.image} className={classes.image} />
+          <Typography className={classes.name} noWrap>
+            {track.name}
+          </Typography>
         </Box>
       ))}
     </div>
