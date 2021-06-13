@@ -2,7 +2,7 @@ import { Box, makeStyles, Typography } from "@material-ui/core";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     color: "white",
     display: "flex",
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     color: "gray",
     fontSize: "14px",
   },
-}));
+});
 
 export default function TopArtists() {
   const { data } = useSWR("/api/top-tracks", fetcher);
