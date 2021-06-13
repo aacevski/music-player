@@ -14,6 +14,7 @@ import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
 import UserProfile from "../components/UserProfile";
+import RecentlyPlayedRow from "../components/RecentlyPlayedRow";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
     height: "100%",
     borderTopRightRadius: 20,
+    flexDirection: "column",
+    marginTop: "32px",
+    padding: 8,
     [theme.breakpoints.down("sm")]: {
       borderRadius: 0,
       width: "100%",
@@ -124,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   loadingSpinner: {
-    color: "#5054AC",
+    color: "#F50057",
   },
 
   progressBar: {
@@ -186,7 +190,7 @@ const IndexPage = () => {
   });
 
   const [progress, setProgress] = React.useState<any>(
-    Math.round(data?.progress_ms / 1000)
+    Math.round(data?.progress_ms / 1000) - 1
   );
 
   React.useEffect(() => {
@@ -249,6 +253,7 @@ const IndexPage = () => {
                   <UserProfile />
                 </Box>
               </Box>
+              <RecentlyPlayedRow />
             </Box>
           </Box>
           <Box flexDirection="row" display="flex" width="100%" height="15%">
@@ -281,25 +286,19 @@ const IndexPage = () => {
               </Box>
 
               <Box className={classes.controls}>
-                {/* {!data?.isPlaying ? ( */}
-                {/* <CircularProgress className={classes.loadingSpinner} /> */}
-                {/* ) : ( */}
-                <>
-                  <LinearProgress
-                    color="secondary"
-                    variant="determinate"
-                    value={
-                      !data?.isPlaying
-                        ? 0
-                        : (progress * 100) / Number(data?.duration_ms / 1000)
-                    }
-                    className={classes.progressBar}
-                  />
-                  <Typography className={classes.timeStamp}>
-                    {!data?.isPlaying ? "0:00" : convertTime(progress)}
-                  </Typography>
-                </>
-                {/* )} */}
+                <LinearProgress
+                  color="secondary"
+                  variant="determinate"
+                  value={
+                    !data?.isPlaying
+                      ? 0
+                      : (progress * 100) / Number(data?.duration_ms / 1000)
+                  }
+                  className={classes.progressBar}
+                />
+                <Typography className={classes.timeStamp}>
+                  {!data?.isPlaying ? "0:00" : convertTime(progress)}
+                </Typography>
               </Box>
             </Box>
           </Box>

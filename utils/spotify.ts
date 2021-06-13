@@ -14,11 +14,10 @@ export const getAccessToken = async () => {
     headers: {
       Authorization: `Basic ${basic}`,
       "Content-Type": "application/x-www-form-urlencoded",
-      scope: "user-modify-playback-state",
     },
     body: querystring.stringify({
       grant_type: "refresh_token",
-      refresh_token,
+      refresh_token: refresh_token,
     }),
   });
 
@@ -69,6 +68,19 @@ export const userProfile = async () => {
   return fetch(USER_PROFILE, {
     headers: {
       Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+const RECENTLY_PLAYED = `https://api.spotify.com/v1/me/player/recently-played`;
+
+export const recentlyPlayed = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(RECENTLY_PLAYED, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      scope: "user-read-recently-played",
     },
   });
 };
