@@ -205,6 +205,13 @@ const useStyles = makeStyles((theme) => ({
   controlButton: {
     color: "white",
   },
+
+  mobileControlButtons: {
+    display: "none",
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+    },
+  },
 }));
 
 const IndexPage = () => {
@@ -314,14 +321,15 @@ const IndexPage = () => {
                     </Box>
                   </>
                 )}
-                <IconButton
-                  className={classes.controlButton}
-                  onClick={data?.isPlaying ? pauseTrack : playTrack}
-                >
-                  {data?.isPlaying ? <StopIcon /> : <PlayArrowIcon />}
-                </IconButton>
+                <Box className={classes.mobileControlButtons}>
+                  <IconButton
+                    className={classes.controlButton}
+                    onClick={data?.isPlaying ? pauseTrack : playTrack}
+                  >
+                    {data?.isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+                  </IconButton>
+                </Box>
               </Box>
-
               <Box className={classes.controls}>
                 <Box className={classes.controlButtons}>
                   <IconButton
