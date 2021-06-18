@@ -95,3 +95,55 @@ export const topTracks = async () => {
     },
   });
 };
+
+const PLAY_TRACK_ENDPOINT = `https://api.spotify.com/v1/me/player/play`;
+
+export const playTrack = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(PLAY_TRACK_ENDPOINT, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+const PAUSE_TRACK_ENDPOINT = `https://api.spotify.com/v1/me/player/pause`;
+
+export const pauseTrack = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(PAUSE_TRACK_ENDPOINT, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+const NEXT_TRACK_ENDPOINT = `https://api.spotify.com/v1/me/player/next`;
+
+export const nextTrack = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(NEXT_TRACK_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
+
+const PREVIOUS_TRACK_ENDPOINT = `https://api.spotify.com/v1/me/player/previous`;
+
+export const previousTrack = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(PREVIOUS_TRACK_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};

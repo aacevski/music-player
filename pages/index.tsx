@@ -8,14 +8,25 @@ import {
   LinearProgress,
   Input,
   InputAdornment,
+  IconButton,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import SkipNextIcon from "@material-ui/icons/SkipNext";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
+import StopIcon from "@material-ui/icons/Stop";
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
 import UserProfile from "../components/UserProfile";
 import RecentlyPlayedRow from "../components/RecentlyPlayedRow";
 import TopArtists from "../components/TopArtists";
+import {
+  playTrack,
+  nextTrack,
+  previousTrack,
+  pauseTrack,
+} from "../utils/spotify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,15 +79,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     height: "100%",
     width: "80%",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingLeft: 32,
-    paddingRight: 32,
+    paddingTop: 16,
+    flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      paddingLeft: 0,
-      paddingRight: 0,
       height: "5px",
+      paddingTop: 0,
     },
   },
 
@@ -171,10 +179,42 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: "16px",
     },
   },
+
+  controlButtons: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+
+  progress: {
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 32,
+    paddingRight: 32,
+    [theme.breakpoints.down("sm")]: {
+      height: 5,
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
+  },
+
+  controlButton: {
+    color: "white",
+  },
 }));
 
 const IndexPage = () => {
   const classes = useStyles();
+  const { data } = useSWR("/api/currently-playing", fetcher, {
+    refreshInterval: 1,
+  });
+  const [progress, setProgress] = React.useState<any>(
+    Math.round(data?.progress_ms / 1000) - 1
+  );
 
   const convertTime = (progress: any) => {
     let minutes = Math.floor(progress / 60);
@@ -185,14 +225,6 @@ const IndexPage = () => {
     progress = minutes + ":" + seconds;
     return progress;
   };
-
-  const { data } = useSWR("/api/currently-playing", fetcher, {
-    refreshInterval: 1,
-  });
-
-  const [progress, setProgress] = React.useState<any>(
-    Math.round(data?.progress_ms / 1000) - 1
-  );
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -270,37 +302,62 @@ const IndexPage = () => {
                       alt="Album Cover"
                       className={classes.songPlayingCover}
                     />
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      overflow="hidden"
-                      width="100%"
-                    >
-                      <Typography className={classes.songPlayingName} noWrap>
-                        {data?.title}
-                      </Typography>
-                      <Typography className={classes.songArtist} noWrap>
-                        {data?.artist}
-                      </Typography>
+                    <Box display="flex" overflow="hidden" width="100%">
+                      <Box display="flex" flexDirection="column">
+                        <Typography className={classes.songPlayingName} noWrap>
+                          {data?.title}
+                        </Typography>
+                        <Typography className={classes.songArtist} noWrap>
+                          {data?.artist}
+                        </Typography>
+                      </Box>
                     </Box>
                   </>
                 )}
+                <IconButton
+                  className={classes.controlButton}
+                  onClick={data?.isPlaying ? pauseTrack : playTrack}
+                >
+                  {data?.isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+                </IconButton>
               </Box>
 
               <Box className={classes.controls}>
-                <LinearProgress
-                  color="secondary"
-                  variant="determinate"
-                  value={
-                    !data?.isPlaying
-                      ? 0
-                      : (progress * 100) / Number(data?.duration_ms / 1000)
-                  }
-                  className={classes.progressBar}
-                />
-                <Typography className={classes.timeStamp}>
-                  {!data?.isPlaying ? "0:00" : convertTime(progress)}
-                </Typography>
+                <Box className={classes.controlButtons}>
+                  <IconButton
+                    className={classes.controlButton}
+                    onClick={previousTrack}
+                  >
+                    <SkipPreviousIcon />
+                  </IconButton>
+                  <IconButton
+                    className={classes.controlButton}
+                    onClick={data?.isPlaying ? pauseTrack : playTrack}
+                  >
+                    {data?.isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+                  </IconButton>
+                  <IconButton
+                    className={classes.controlButton}
+                    onClick={nextTrack}
+                  >
+                    <SkipNextIcon />
+                  </IconButton>
+                </Box>
+                <Box className={classes.progress}>
+                  <LinearProgress
+                    color="secondary"
+                    variant="determinate"
+                    value={
+                      !data?.isPlaying
+                        ? 0
+                        : (progress * 100) / Number(data?.duration_ms / 1000)
+                    }
+                    className={classes.progressBar}
+                  />
+                  <Typography className={classes.timeStamp}>
+                    {!data?.isPlaying ? "0:00" : convertTime(progress)}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
