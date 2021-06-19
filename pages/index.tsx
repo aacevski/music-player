@@ -8,27 +8,25 @@ import {
   Input,
   InputAdornment,
   IconButton,
-  Slider,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import StopIcon from "@material-ui/icons/Stop";
-import VolumeUpIcon from "@material-ui/icons/VolumeUp";
-import VolumeOffIcon from "@material-ui/icons/VolumeOff";
+
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
 import UserProfile from "../components/UserProfile";
 import RecentlyPlayedRow from "../components/RecentlyPlayedRow";
+import VolumeSlider from "../components/VolumeSlider";
 import TopArtists from "../components/TopArtists";
 import {
   playTrack,
   nextTrack,
   previousTrack,
   pauseTrack,
-  setVolume,
 } from "../utils/spotify";
 
 const useStyles = makeStyles((theme) => ({
@@ -205,10 +203,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  controlButton: {
-    color: "white",
-  },
-
   mobileControlButtons: {
     display: "none",
     [theme.breakpoints.down("sm")]: {
@@ -216,21 +210,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
-  volumeContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingRight: 32,
-    paddingLeft: 32,
-    width: 250,
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-    },
-  },
-
-  volumeSlider: {
-    color: "#F50057",
-    marginLeft: 15,
+  controlButton: {
+    color: "white",
   },
 }));
 
@@ -248,21 +229,12 @@ const IndexPage = () => {
   const [progress, setProgress] = React.useState<any>(
     Math.round(data?.progress_ms / 1000) - 1
   );
-  const [volumeValue, setVolumeValue] = React.useState<number | number[]>(0);
   const [currentlyPlaying, setCurrentlyPlaying] =
     React.useState<currentlyPlayingType>();
 
   React.useEffect(() => {
     setCurrentlyPlaying(data);
   }, [data]);
-
-  const handleVolumeChange = (
-    _event: React.ChangeEvent<{}>,
-    newVolumeValue: number | number[]
-  ) => {
-    setVolumeValue(newVolumeValue);
-    setVolume(newVolumeValue);
-  };
 
   const convertTime = (progress: any) => {
     let minutes = Math.floor(progress / 60);
@@ -402,19 +374,7 @@ const IndexPage = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Box className={classes.volumeContainer}>
-                {volumeValue == 0 ? (
-                  <VolumeOffIcon className={classes.controlButton} />
-                ) : (
-                  <VolumeUpIcon className={classes.controlButton} />
-                )}
-                <Slider
-                  value={volumeValue}
-                  onChange={handleVolumeChange}
-                  aria-labelledby="continuous-slider"
-                  className={classes.volumeSlider}
-                />
-              </Box>
+              <VolumeSlider />
             </Box>
           </Box>
         </Box>

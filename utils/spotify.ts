@@ -159,3 +159,15 @@ export const setVolume = async (volumeValue: number | number[]) => {
     },
   });
 };
+
+const PLAYER_INFORMATION_ENDPOINT = `https://api.spotify.com/v1/me/player`;
+
+export const playerInformation = async () => {
+  const { access_token } = await getAccessToken();
+
+  return fetch(PLAYER_INFORMATION_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};
