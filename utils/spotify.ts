@@ -147,3 +147,15 @@ export const previousTrack = async () => {
     },
   });
 };
+
+export const setVolume = async (volumeValue: number | number[]) => {
+  const SET_VOLUME_ENDPOINT = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volumeValue}`;
+  const { access_token } = await getAccessToken();
+
+  return fetch(SET_VOLUME_ENDPOINT, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+};

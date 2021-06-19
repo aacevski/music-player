@@ -28,6 +28,24 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiSlider: {
+      // root: {
+      //   "&$active": {
+      //     boxShadow: "0px 0px 0px 8px rgb(245 0 87 / 16%)",
+      //   },
+      //   "&$focusVisible": {
+      //     boxShadow: "0px 0px 0px 8px rgb(245 0 87 / 16%)",
+      //   },
+      // },
+      thumb: {
+        "&:hover": {
+          boxShadow: "0px 0px 0px 8px rgb(245 0 87 / 16%)",
+        },
+        "&$focusVisible": {
+          boxShadow: "0px 0px 0px 8px rgb(245 0 87 / 16%)",
+        },
+      },
+    },
   },
 });
 

@@ -4,17 +4,19 @@ import {
   CssBaseline,
   makeStyles,
   Typography,
-  CircularProgress,
   LinearProgress,
   Input,
   InputAdornment,
   IconButton,
+  Slider,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import StopIcon from "@material-ui/icons/Stop";
+import VolumeUpIcon from "@material-ui/icons/VolumeUp";
+import VolumeOffIcon from "@material-ui/icons/VolumeOff";
 import useSWR from "swr";
 
 import fetcher from "../utils/fetcher";
@@ -26,6 +28,7 @@ import {
   nextTrack,
   previousTrack,
   pauseTrack,
+  setVolume,
 } from "../utils/spotify";
 
 const useStyles = makeStyles((theme) => ({
@@ -212,7 +215,30 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
     },
   },
+
+  volumeContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingRight: 32,
+    paddingLeft: 32,
+    width: 250,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+
+  volumeSlider: {
+    color: "#F50057",
+    marginLeft: 15,
+  },
 }));
+
+type currentlyPlayingType = {
+  artist: string;
+  title: string;
+  albumImageUrl: string;
+};
 
 const IndexPage = () => {
   const classes = useStyles();
@@ -222,6 +248,22 @@ const IndexPage = () => {
   const [progress, setProgress] = React.useState<any>(
     Math.round(data?.progress_ms / 1000) - 1
   );
+  const [volumeValue, setVolumeValue] = React.useState<number | number[]>(0);
+  const [currentlyPlaying, setCurrentlyPlaying] =
+    React.useState<currentlyPlayingType>();
+
+  React.useEffect(() => {
+    setCurrentlyPlaying(data);
+  }, [data]);
+
+  const handleVolumeChange = (
+    // eslint-disable-line no-unused-vars
+    event: React.ChangeEvent<{}>,
+    newVolumeValue: number | number[]
+  ) => {
+    setVolumeValue(newVolumeValue);
+    setVolume(newVolumeValue);
+  };
 
   const convertTime = (progress: any) => {
     let minutes = Math.floor(progress / 60);
@@ -300,27 +342,21 @@ const IndexPage = () => {
           <Box flexDirection="row" display="flex" width="100%" height="15%">
             <Box className={classes.footer}>
               <Box className={classes.songPlaying}>
-                {!data?.isPlaying ? (
-                  <CircularProgress className={classes.loadingSpinner} />
-                ) : (
-                  <>
-                    <img
-                      src={data?.albumImageUrl}
-                      alt="Album Cover"
-                      className={classes.songPlayingCover}
-                    />
-                    <Box display="flex" overflow="hidden" width="100%">
-                      <Box display="flex" flexDirection="column">
-                        <Typography className={classes.songPlayingName} noWrap>
-                          {data?.title}
-                        </Typography>
-                        <Typography className={classes.songArtist} noWrap>
-                          {data?.artist}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </>
-                )}
+                <img
+                  src={currentlyPlaying?.albumImageUrl}
+                  alt="Album Cover"
+                  className={classes.songPlayingCover}
+                />
+                <Box display="flex" overflow="hidden" width="100%">
+                  <Box display="flex" flexDirection="column">
+                    <Typography className={classes.songPlayingName} noWrap>
+                      {currentlyPlaying?.title}
+                    </Typography>
+                    <Typography className={classes.songArtist} noWrap>
+                      {currentlyPlaying?.artist}
+                    </Typography>
+                  </Box>
+                </Box>
                 <Box className={classes.mobileControlButtons}>
                   <IconButton
                     className={classes.controlButton}
@@ -366,6 +402,19 @@ const IndexPage = () => {
                     {!data?.isPlaying ? "0:00" : convertTime(progress)}
                   </Typography>
                 </Box>
+              </Box>
+              <Box className={classes.volumeContainer}>
+                {volumeValue == 0 ? (
+                  <VolumeOffIcon className={classes.controlButton} />
+                ) : (
+                  <VolumeUpIcon className={classes.controlButton} />
+                )}
+                <Slider
+                  value={volumeValue}
+                  onChange={handleVolumeChange}
+                  aria-labelledby="continuous-slider"
+                  className={classes.volumeSlider}
+                />
               </Box>
             </Box>
           </Box>
