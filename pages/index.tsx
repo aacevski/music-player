@@ -257,8 +257,7 @@ const IndexPage = () => {
   }, [data]);
 
   const handleVolumeChange = (
-    // eslint-disable-line no-unused-vars
-    event: React.ChangeEvent<{}>,
+    _event: React.ChangeEvent<{}>,
     newVolumeValue: number | number[]
   ) => {
     setVolumeValue(newVolumeValue);
